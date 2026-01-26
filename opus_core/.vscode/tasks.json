@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build + Copy + Launch Opus (Release)",
+      "type": "shell",
+      "command": "cmd.exe",
+      "args": ["/d", "/c", ".vscode\\build_copy_launch_release.cmd"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": "$msCompile",
+      "group": { "kind": "build", "isDefault": true },
+      "presentation": { "reveal": "always", "panel": "shared", "clear": true }
+    }
+  ]
+}
