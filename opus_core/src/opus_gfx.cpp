@@ -113,3 +113,68 @@ namespace opus::gfx
         // Setters
         
     }
+
+// Class Surface
+
+
+// Class Drawable
+namespace opus::gfx
+{
+    // Constructor and Destructor
+    Drawable::Drawable()
+        : m_renderable(true)
+    {
+    }
+    Drawable::~Drawable()
+    {
+    }
+
+    bool Drawable::IsDrawable() { return m_renderable; }
+}
+
+// Class DrawableTask
+namespace opus::gfx
+{
+    
+    bool DrawableTask::AddDrawable(Drawable& drawable)
+    {
+        // prevent duplicates
+        auto it = std::find(m_drawables.begin(), m_drawables.end(), &drawable);
+        if (it != m_drawables.end())
+            return false;
+
+        m_drawables.push_back(&drawable);
+        return true;
+    }
+
+    bool DrawableTask::RemoveDrawable(Drawable& drawable)
+    {
+        auto it = std::remove(m_drawables.begin(), m_drawables.end(), &drawable);
+        if (it == m_drawables.end())
+            return false;
+
+        m_drawables.erase(it, m_drawables.end());
+        return true;
+    }
+
+    bool DrawableTask::Clear()
+    {
+        m_drawables.clear();
+        return true;
+    }
+
+    void DrawableTask::OnUpdate(uint64_t /*count*/)
+    {
+        // Draw in the order they were added
+        for (auto* d : m_drawables)
+        {
+            if (!d)
+                continue;
+
+            // Your current API names it IsDrawable(); use it as a visibility gate.
+            if (!d->IsDrawable())
+                continue;
+        }
+    }
+}
+

@@ -1,6 +1,10 @@
 #pragma once
 #include <array>
 #include <cstdint>
+#include <vector>
+#include <algorithm>
+
+#include "opus_tasks.h"
 
 // Class Color
 namespace opus::gfx
@@ -62,4 +66,48 @@ namespace opus::gfx
         uint8_t m_numColors; // 0..255
         std::array<Color, MAX_COLORS> m_palette;
     };
+}
+
+// Class Surface
+namespace opus::gfx
+{
+    class Surface;
+}
+
+// Class Drawable
+namespace opus::gfx
+{
+    class Drawable
+    {
+    public:
+        // Constructor and Destructor
+        Drawable() = default;
+        virtual ~Drawable() = default;
+
+        bool IsVisible();
+        bool IsDrawable();
+        virtual void Draw(Surface& target) = 0;
+    private:
+        bool m_visible = true;
+        bool m_renderable;
+    };
+}
+
+// Class Drawable Task
+namespace opus::gfx
+{
+    class DrawableTask : public opus::tasks::Task
+    {
+    public:
+        bool AddDrawable(Drawable& drawable);
+        bool RemoveDrawable(Drawable& drawable);
+        bool Clear();
+
+    protected:
+        void OnInitialize() override {}
+        void OnUpdate(uint64_t count) override;
+
+    private:
+        std::vector<Drawable*> m_drawables;
+    }
 }
